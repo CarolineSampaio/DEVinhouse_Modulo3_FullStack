@@ -12,7 +12,7 @@ use App\Http\Controllers\VaccineController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('breeds', [BreedController::class, 'store'])->middleware(['auth:sanctum', 'ability:create-races']);
+    // Route::post('breeds', [BreedController::class, 'store'])->middleware(['auth:sanctum', 'ability:create-races']);
     // Route::get('breeds', [BreedController::class, 'index'])->middleware(['auth:sanctum', 'ability:get-races']);
 
     // Route::get('species', [SpecieController::class, 'index'])->middleware(['ability:create-species']);
@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('species/{id}', [SpecieController::class, 'destroy'])->middleware(['ability:delete-species']);
 
     // Route::get('pets', [PetController::class, 'index'])->middleware(['ability:get-pets']);
-    Route::post('pets', [PetController::class, 'store'])->middleware(['ability:create-pets']);
+    // Route::post('pets', [PetController::class, 'store'])->middleware(['ability:create-pets']);
     Route::delete('pets/{id}', [PetController::class, 'destroy'])->middleware(['ability:delete-pets']);
 
     Route::get('pets/export', [PetsReportController::class, 'export'])->middleware(['ability:export-pdf-pets']);
@@ -38,9 +38,13 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('breeds', [BreedController::class, 'index']);
+Route::post('breeds', [BreedController::class, 'store']);
+
 Route::get('species', [SpecieController::class, 'index']);
-Route::get('pets', [PetController::class, 'index']);
 Route::post('species', [SpecieController::class, 'store']);
+
+Route::get('pets', [PetController::class, 'index']);
+Route::post('pets', [PetController::class, 'store']);
 
 
 Route::post('users', [UserController::class, 'store']);
