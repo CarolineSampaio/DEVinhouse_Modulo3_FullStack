@@ -1,57 +1,70 @@
 <template>
-  <v-card width="80%" class="mx-auto px-6 mt-4" title="Cadastro de pet">
-    <v-row>
-      <v-col cols="12" md="8">
-        <v-text-field label="Nome" variant="outlined" v-model="name" />
-      </v-col>
-      <v-col cols="12" md="2" sm="6">
-        <v-text-field label="Idade" type="number" variant="outlined" v-model="age" />
-      </v-col>
-      <v-col cols="12" md="2" sm="6">
-        <v-text-field label="Peso" type="number" variant="outlined" v-model="weight" />
-      </v-col>
-    </v-row>
+  <form @submit.prevent="handleSubmit">
+    <v-card width="80%" class="mx-auto px-6 mt-4" title="Cadastro de pet">
+      <v-row>
+        <v-col cols="12" md="8">
+          <v-text-field label="Nome" variant="outlined" v-model="name" />
+        </v-col>
+        <v-col cols="12" md="2" sm="6">
+          <v-text-field label="Idade" type="number" variant="outlined" v-model="age" />
+        </v-col>
+        <v-col cols="12" md="2" sm="6">
+          <v-text-field label="Peso" type="number" variant="outlined" v-model="weight" />
+        </v-col>
+      </v-row>
 
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-select
-          label="Tamanho"
-          :items="itemsSize"
-          variant="outlined"
-          placeholder="Selecione um item"
-          v-model="size"
-        />
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-select
-          label="Espécie"
-          :items="itemsSpecies"
-          variant="outlined"
-          placeholder="Selecione um espécie"
-          v-model="specie"
-          item-title="name"
-          item-value="id"
-        />
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-select
-          label="Raça"
-          :items="itemsBreeds"
-          variant="outlined"
-          placeholder="Selecione um raça"
-          v-model="breed"
-          item-title="name"
-          item-value="id"
-        />
-      </v-col>
-    </v-row>
-  </v-card>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-select
+            label="Tamanho"
+            :items="itemsSize"
+            variant="outlined"
+            placeholder="Selecione um item"
+            v-model="size"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-select
+            label="Espécie"
+            :items="itemsSpecies"
+            variant="outlined"
+            placeholder="Selecione um espécie"
+            v-model="specie"
+            item-title="name"
+            item-value="id"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-select
+            label="Raça"
+            :items="itemsBreeds"
+            variant="outlined"
+            placeholder="Selecione um raça"
+            v-model="breed"
+            item-title="name"
+            item-value="id"
+          />
+        </v-col>
+      </v-row>
+
+      <v-card-actions class="d-flex justify-end">
+        <v-btn color="orange text-white" type="submit" variant="flat" class="font-weight-bold">
+          Cadastrar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </form>
+
+  <v-snackbar v-model="success" timeout="3000" color="success" location="top right">
+    Pet Cadastrado com sucesso!
+  </v-snackbar>
 </template>
 
 <script>
 import { optionsSize } from '../constants/pet.constants'
 import SpecieService from '../services/SpecieService'
 import BreedService from '../services/BreedService'
+import PetService from '../services/PetService'
 
 export default {
   data() {
@@ -65,7 +78,8 @@ export default {
 
       itemsSize: optionsSize,
       itemsSpecies: [],
-      itemsBreeds: []
+      itemsBreeds: [],
+      success: false
     }
   },
   mounted() {
@@ -78,6 +92,30 @@ export default {
     BreedService.getAllBreeds().then((data) => {
       this.itemsBreeds = data
     })
+  },
+  methods: {
+    handleSubmit() {
+      const pet = {
+        name: this.name,
+        age: this.age,
+        weight: this.weight,
+        size: this.size,
+        specie_id: this.specie,
+        breed_id: this.breed
+      }
+
+      PetService.createPet(pet)
+        .then(() => {
+          this.success = true
+          this.name = ''
+          this.age = 1
+          this.weight = 1
+          this.size = ''
+          this.specie = ''
+          this.breed = ''
+        })
+        .catch(() => alert('Houve um erro ao cadastrar o pet'))
+    }
   }
 }
 </script>
