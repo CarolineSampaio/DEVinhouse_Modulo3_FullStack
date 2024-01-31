@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('breeds', [BreedController::class, 'store'])->middleware(['auth:sanctum', 'ability:create-races']);
-    Route::get('breeds', [BreedController::class, 'index'])->middleware(['auth:sanctum', 'ability:get-races']);
+    // Route::get('breeds', [BreedController::class, 'index'])->middleware(['auth:sanctum', 'ability:get-races']);
 
     // Route::get('species', [SpecieController::class, 'index'])->middleware(['ability:create-species']);
-    Route::post('species', [SpecieController::class, 'store'])->middleware(['ability:create-species']);
+    // Route::post('species', [SpecieController::class, 'store'])->middleware(['ability:create-species']);
     Route::get('species', [SpecieController::class, 'index'])->middleware(['ability:get-species']);
     Route::delete('species/{id}', [SpecieController::class, 'destroy'])->middleware(['ability:delete-species']);
 
@@ -37,8 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
+Route::get('breeds', [BreedController::class, 'index']);
 Route::get('species', [SpecieController::class, 'index']);
 Route::get('pets', [PetController::class, 'index']);
+Route::post('species', [SpecieController::class, 'store']);
+
 
 Route::post('users', [UserController::class, 'store']);
 

@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
-class PetController extends Controller {
+class PetController extends Controller
+{
     use HttpResponses;
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
 
             // pegar os dados que foram enviados via query params
@@ -27,7 +29,10 @@ class PetController extends Controller {
                     'id',
                     'pets.name as pet_name',
                     'pets.breed_id',
-                    'pets.specie_id'
+                    'pets.specie_id',
+                    'pets.size as size',
+                    'pets.weight as weight',
+                    'pets.age as age'
                 )
                 #->with('breed') // traz todas as colunas
                 ->with(['breed' => function ($query) {
@@ -53,6 +58,10 @@ class PetController extends Controller {
                 $pets->where('weight', $filters['weight']);
             }
 
+            if ($request->has('specie_id') && !empty($filters['specie_id'])) {
+                $pets->where('specie_id', $filters['specie_id']);
+            }
+
             // retorna o resultado
             $columnOrder = $request->has('order') && !empty($filters['order']) ?  $filters['order'] : 'name';
 
@@ -62,7 +71,8 @@ class PetController extends Controller {
         }
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             // rebecer os dados via body
             $data = $request->all();
@@ -93,7 +103,8 @@ class PetController extends Controller {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         try {
             $pet = Pet::find($id);
 
