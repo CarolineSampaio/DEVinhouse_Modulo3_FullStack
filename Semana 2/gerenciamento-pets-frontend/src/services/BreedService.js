@@ -1,10 +1,10 @@
-import axios from 'axios'
+import api from './api'
 
 class BreedService {
   async createBreed() {}
 
   async getAllBreeds() {
-    const response = await axios.get('http://127.0.0.1:8000/api/breeds')
+    const response = await api.get('breeds')
     return response.data
   }
 }
