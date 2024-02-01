@@ -3,13 +3,30 @@
     <v-card width="80%" class="mx-auto px-6 mt-4" title="Cadastro de pet">
       <v-row>
         <v-col cols="12" md="8">
-          <v-text-field label="Nome" variant="outlined" v-model="name" />
+          <v-text-field
+            label="Nome"
+            variant="outlined"
+            v-model="name"
+            :error-messages="errors.name"
+          />
         </v-col>
         <v-col cols="12" md="2" sm="6">
-          <v-text-field label="Idade" type="number" variant="outlined" v-model="age" />
+          <v-text-field
+            label="Idade"
+            type="number"
+            variant="outlined"
+            v-model="age"
+            :error-messages="errors.age"
+          />
         </v-col>
         <v-col cols="12" md="2" sm="6">
-          <v-text-field label="Peso" type="number" variant="outlined" v-model="weight" />
+          <v-text-field
+            label="Peso"
+            type="number"
+            variant="outlined"
+            v-model="weight"
+            :error-messages="errors.weight"
+          />
         </v-col>
       </v-row>
 
@@ -21,6 +38,7 @@
             variant="outlined"
             placeholder="Selecione um item"
             v-model="size"
+            :error-messages="errors.size"
           />
         </v-col>
         <v-col cols="12" md="4">
@@ -29,9 +47,10 @@
             :items="itemsSpecies"
             variant="outlined"
             placeholder="Selecione um espécie"
-            v-model="specie"
+            v-model="specie_id"
             item-title="name"
             item-value="id"
+            :error-messages="errors.specie_id"
           />
         </v-col>
         <v-col cols="12" md="4">
@@ -40,9 +59,10 @@
             :items="itemsBreeds"
             variant="outlined"
             placeholder="Selecione um raça"
-            v-model="breed"
+            v-model="breed_id"
             item-title="name"
             item-value="id"
+            :error-messages="errors.breed_id"
           />
         </v-col>
       </v-row>
@@ -66,6 +86,10 @@ import SpecieService from '../services/SpecieService'
 import BreedService from '../services/BreedService'
 import PetService from '../services/PetService'
 
+import { schemaPetForm } from '../validations/pet.validations'
+import { captureErrorYup } from '../utils/captureErrorYup'
+import * as yup from 'yup'
+
 export default {
   data() {
     return {
@@ -73,8 +97,9 @@ export default {
       age: 1,
       weight: 1,
       size: '',
-      specie: '',
-      breed: '',
+      specie_id: '',
+      breed_id: '',
+      errors: {},
 
       itemsSize: optionsSize,
       itemsSpecies: [],
@@ -95,26 +120,36 @@ export default {
   },
   methods: {
     handleSubmit() {
-      const pet = {
-        name: this.name,
-        age: this.age,
-        weight: this.weight,
-        size: this.size,
-        specie_id: this.specie,
-        breed_id: this.breed
-      }
+      try {
+        const pet = {
+          name: this.name,
+          age: this.age,
+          weight: this.weight,
+          size: this.size,
+          specie_id: this.specie_id,
+          breed_id: this.breed_id
+        }
 
-      PetService.createPet(pet)
-        .then(() => {
-          this.success = true
-          this.name = ''
-          this.age = 1
-          this.weight = 1
-          this.size = ''
-          this.specie = ''
-          this.breed = ''
-        })
-        .catch(() => alert('Houve um erro ao cadastrar o pet'))
+        schemaPetForm.validateSync(pet, { abortEarly: false })
+
+        PetService.createPet(pet)
+          .then(() => {
+            this.success = true
+
+            this.name = ''
+            this.age = 1
+            this.weight = 1
+            this.size = ''
+            this.specie_id = ''
+            this.breed_id = ''
+            this.errors = {}
+          })
+          .catch(() => alert('Houve um erro ao cadastrar o pet'))
+      } catch (error) {
+        if (error instanceof yup.ValidationError) {
+          this.errors = captureErrorYup(error)
+        }
+      }
     }
   }
 }
