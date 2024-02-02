@@ -29,8 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('clients', [ClientController::class, 'store'])->middleware(['ability:create-clients']);
     Route::get('clients', [ClientController::class, 'index'])->middleware(['ability:get-clients']);
 
-    Route::post('profissionals', [ProfessionalController::class, 'store'])->middleware(['ability:create-profissionals']);
-    Route::get('profissionals', [ProfessionalController::class, 'index'])->middleware(['ability:get-profissionals']);
+    Route::post('professionals', [ProfessionalController::class, 'store'])->middleware(['ability:create-professionals']);
+    Route::get('professionals', [ProfessionalController::class, 'index'])->middleware(['ability:get-professionals']);
 
     Route::post('vaccines', [VaccineController::class, 'store'])->middleware(['ability:create-vaccines']);
 
