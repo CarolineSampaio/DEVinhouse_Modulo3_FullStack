@@ -60,6 +60,7 @@ export default {
         .then(({ data }) => {
           api.defaults.headers.common.Authorization = `Bearer ${data.token}`
           localStorage.setItem('@token_petshop', data.token)
+          localStorage.setItem('@permissions_petshop', JSON.stringify(data.permissions))
           this.$router.push('/home')
         })
         .catch((error) => {

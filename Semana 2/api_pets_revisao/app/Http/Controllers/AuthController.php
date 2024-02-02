@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
     use HttpResponses;
 
     private $permissions = [
@@ -22,8 +23,8 @@ class AuthController extends Controller {
             'create-pets',
             'get-pets',
             'delete-pets',
-            'create-profissionals',
-            'get-profissionals'
+            'create-professionals',
+            'get-professionals'
         ],
         'RECEPCIONISTA' => [
             'create-pets',
@@ -31,7 +32,8 @@ class AuthController extends Controller {
             'delete-pets',
             'export-pet-pets',
             'create-clients',
-            'get-clients'
+            'get-clients',
+            'get-species'
         ],
         'VETERINARIO' => [
             'create-races',
@@ -46,7 +48,8 @@ class AuthController extends Controller {
         ]
     ];
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             $data = $request->only(['email', 'password']);
 
@@ -71,13 +74,15 @@ class AuthController extends Controller {
 
             return $this->response('Autorizado', Response::HTTP_OK, [
                 'token' => $token->plainTextToken,
+                'permissions' => $permissionsUser
             ]);
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->user()->currentAccessToken()->delete();
         return $this->response('', Response::HTTP_NO_CONTENT);
     }
