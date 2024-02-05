@@ -1,0 +1,11 @@
+Assuntos da Semana:
+
+Agilidade no Desenvolvimento
+- O que são metodologias ágeis
+- Qual a importância
+- Tipos de metodologias e ferramentas
+- SCRUM
+
+Linux Básico
+- Introdução e Arquitetura do SO
+- Terminal e principais comandos
