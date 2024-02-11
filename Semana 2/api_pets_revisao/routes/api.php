@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
 use App\Http\Controllers\ClientController;
@@ -38,5 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('users', [UserController::class, 'store']);
-
 Route::post('login', [AuthController::class, 'store']);
+
+Route::get('pets/adocao', [AdoptionController::class, 'index']);
+Route::get('pets/{id}', [AdoptionController::class, 'show']);
