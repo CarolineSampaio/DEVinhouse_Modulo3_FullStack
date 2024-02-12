@@ -1,7 +1,18 @@
 <template>
+  <v-snackbar v-model="success" timeout="3000" color="success" location="top right">
+    Pet Cadastrado com sucesso!
+  </v-snackbar>
+
   <form @submit.prevent="handleSubmit">
     <v-card width="80%" class="mx-auto px-6 mt-4" title="Cadastro de pet">
-      <v-row>
+      <v-alert
+        v-if="showError"
+        title="Houve um erro ao cadastrar o pet"
+        color="error"
+        closable
+      ></v-alert>
+
+      <v-row class="mt-4">
         <v-col cols="12" md="8">
           <v-text-field
             label="Nome"
@@ -86,10 +97,6 @@
       </v-card-actions>
     </v-card>
   </form>
-
-  <v-snackbar v-model="success" timeout="3000" color="success" location="top right">
-    Pet Cadastrado com sucesso!
-  </v-snackbar>
 </template>
 
 <script>
@@ -112,6 +119,7 @@ export default {
       specie_id: '',
       breed_id: '',
       errors: {},
+      showError: false,
 
       itemsSize: optionsSize,
       itemsSpecies: [],
@@ -156,7 +164,7 @@ export default {
             this.breed_id = ''
             this.errors = {}
           })
-          .catch(() => alert('Houve um erro ao cadastrar o pet'))
+          .catch(() => (this.showError = true))
       } catch (error) {
         if (error instanceof yup.ValidationError) {
           this.errors = captureErrorYup(error)
