@@ -12,7 +12,13 @@
           <th class="text-left">Registro</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        <tr v-for="professional in professionals" :key="professional.id">
+          <td>{{ professional.people.name }}</td>
+          <td>{{ professional.speciality }}</td>
+          <td>{{ professional.register }}</td>
+        </tr>
+      </tbody>
     </v-table>
   </v-container>
 
@@ -63,6 +69,7 @@ import ProfessionalService from '../services/ProfessionalService'
 export default {
   data() {
     return {
+      professionals: [],
       dialog: false,
       name: '',
       email: '',
@@ -92,13 +99,27 @@ export default {
           this.contact = ''
           this.speciality = ''
           this.register = ''
+
+          this.getList()
         })
         .catch(() => {
           alert('Erro ao cadastrar')
         })
+    },
+
+    getList() {
+      ProfessionalService.getAllProfessionals()
+        .then((data) => {
+          this.professionals = data
+        })
+        .catch(() => {
+          alert('Houve um erro ao buscar os profissionais')
+        })
     }
   },
-  mounted() {}
+  mounted() {
+    this.getList()
+  }
 }
 </script>
 
