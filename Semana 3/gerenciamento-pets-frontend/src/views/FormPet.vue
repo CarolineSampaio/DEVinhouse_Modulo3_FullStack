@@ -8,6 +8,7 @@
             variant="outlined"
             v-model="name"
             :error-messages="errors.name"
+            data-test="input-name"
           />
         </v-col>
         <v-col cols="12" md="2" sm="6">
@@ -17,6 +18,7 @@
             variant="outlined"
             v-model="age"
             :error-messages="errors.age"
+            data-test="input-age"
           />
         </v-col>
         <v-col cols="12" md="2" sm="6">
@@ -26,6 +28,7 @@
             variant="outlined"
             v-model="weight"
             :error-messages="errors.weight"
+            data-test="input-weight"
           />
         </v-col>
       </v-row>
@@ -39,6 +42,7 @@
             placeholder="Selecione um item"
             v-model="size"
             :error-messages="errors.size"
+            data-test="select-size"
           />
         </v-col>
         <v-col cols="12" md="4">
@@ -51,6 +55,7 @@
             item-title="name"
             item-value="id"
             :error-messages="errors.specie_id"
+            data-test="select-specie"
           />
         </v-col>
         <v-col cols="12" md="4">
@@ -63,12 +68,19 @@
             item-title="name"
             item-value="id"
             :error-messages="errors.breed_id"
+            data-test="select-breed"
           />
         </v-col>
       </v-row>
 
       <v-card-actions class="d-flex justify-end">
-        <v-btn color="orange text-white" type="submit" variant="flat" class="font-weight-bold">
+        <v-btn
+          color="orange text-white"
+          type="submit"
+          variant="flat"
+          class="font-weight-bold"
+          data-test="submit-button"
+        >
           Cadastrar
         </v-btn>
       </v-card-actions>
