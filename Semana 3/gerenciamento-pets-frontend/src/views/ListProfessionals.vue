@@ -12,6 +12,7 @@
             placeholder="Pesquisa por nome, especialidade ou registro"
             variant="outlined"
             v-model="search"
+            data-test="search-input"
           />
         </v-col>
       </v-row>
@@ -26,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="professional in professionals" :key="professional.id">
+        <tr v-for="professional in professionals" :key="professional.id" data-test="row-table">
           <td>{{ professional.people.name }}</td>
           <td>{{ professional.speciality }}</td>
           <td>{{ professional.register }}</td>
