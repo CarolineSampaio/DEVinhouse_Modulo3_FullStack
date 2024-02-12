@@ -7,7 +7,14 @@
     ></v-img>
 
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
-      <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+      <v-alert
+        v-if="showError"
+        title="Houve um erro ao realizar o login"
+        color="error"
+        closable
+      ></v-alert>
+
+      <div class="text-subtitle-1 text-medium-emphasis mt-4">Account</div>
 
       <v-text-field
         density="compact"
@@ -15,6 +22,7 @@
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
         v-model="email"
+        data-test="input-email"
       />
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
@@ -22,7 +30,7 @@
       </div>
 
       <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+        :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
         :type="visible ? 'text' : 'password'"
         density="compact"
         placeholder="Enter your password"
@@ -30,10 +38,19 @@
         variant="outlined"
         @click:append-inner="visible = !visible"
         v-model="password"
+        data-test="input-password"
       />
 
-      <v-btn block class="mb-8" color="orange text-white" size="large" variant="flat" type="submit">
-        Log In
+      <v-btn
+        block
+        class="mb-8"
+        color="orange text-white"
+        size="large"
+        variant="flat"
+        type="submit"
+        data-test="submit-button"
+      >
+        Log In > Log In
       </v-btn>
     </v-card>
   </form>
@@ -48,7 +65,8 @@ export default {
     return {
       visible: false,
       email: '',
-      password: ''
+      password: '',
+      showError: false
     }
   },
   methods: {
@@ -65,7 +83,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
-          alert('Credenciais incorretas')
+          this.showError = true
         })
     }
   }
