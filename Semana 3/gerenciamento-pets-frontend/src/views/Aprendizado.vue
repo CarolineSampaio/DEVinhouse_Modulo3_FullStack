@@ -22,8 +22,6 @@ export default {
   },
   methods: {
     handleAddItem() {
-      console.log('entrou handleAddItem')
-
       if (this.description.length < 5) {
         this.messageError = 'A descrição é pequena demais.'
       } else {
