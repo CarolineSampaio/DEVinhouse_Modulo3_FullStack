@@ -8,6 +8,7 @@
       :title="specie.name"
       link
       @click="handleRedirect(specie.id)"
+      data-test="card-item"
     />
   </div>
 </template>
