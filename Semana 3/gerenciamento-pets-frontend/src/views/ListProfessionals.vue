@@ -4,6 +4,19 @@
       <h1>Lista de veterinários</h1>
       <v-btn color="orange" type="submit" variant="flat" @click="dialog = true"> Novo </v-btn>
     </div>
+
+    <v-form @submit.prevent="handleSearch">
+      <v-row>
+        <v-col>
+          <v-text-field
+            placeholder="Pesquisa por nome, especialidade ou registro"
+            variant="outlined"
+            v-model="search"
+          />
+        </v-col>
+      </v-row>
+    </v-form>
+
     <v-table>
       <thead class="header-table">
         <tr>
@@ -69,6 +82,7 @@ import ProfessionalService from '../services/ProfessionalService'
 export default {
   data() {
     return {
+      search: '',
       professionals: [],
       dialog: false,
       name: '',
@@ -107,8 +121,12 @@ export default {
         })
     },
 
+    handleSearch() {
+      this.getList()
+    },
+
     getList() {
-      ProfessionalService.getAllProfessionals()
+      ProfessionalService.getAllProfessionals(this.search)
         .then((data) => {
           this.professionals = data
         })

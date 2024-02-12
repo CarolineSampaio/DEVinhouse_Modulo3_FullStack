@@ -7,9 +7,11 @@ use App\Models\Professional;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class ProfessionalController extends Controller {
+class ProfessionalController extends Controller
+{
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             $request->validate([
                 'name' => 'string|required|max:255',
@@ -38,24 +40,27 @@ class ProfessionalController extends Controller {
         }
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
 
-        $search = $request->input('name'); // filtro query params
+        $search = $request->input('text'); // filtro query params
 
         $professionals = Professional::query()
             ->with('people')
-            /*
             ->whereHas('people', function ($query) use ($search) {
                 $query
-                    // ->select('id','name','cpf', 'email', 'contact')
                     ->where('name', 'ilike', "%$search%")
                     ->orWhere('cpf', 'ilike', "%$search%")
                     ->orWhere('contact', 'ilike', "%$search%")
                     ->orWhere('email', 'ilike', "%$search%");
-            })
-            */
-            ->get();
+            });
 
-        return $professionals;
+        if ($search) {
+            $professionals
+                ->orWhere("register", $search)
+                ->orWhere("speciality", 'ilike', "%$search%");
+        }
+
+        return $professionals->get();
     }
 }
