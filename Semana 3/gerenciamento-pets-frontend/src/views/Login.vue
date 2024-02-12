@@ -50,7 +50,7 @@
         type="submit"
         data-test="submit-button"
       >
-        Log In > Log In
+        Login
       </v-btn>
     </v-card>
   </form>
