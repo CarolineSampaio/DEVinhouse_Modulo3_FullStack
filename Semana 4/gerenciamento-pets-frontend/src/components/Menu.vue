@@ -28,16 +28,35 @@
         <v-list-item prepend-icon="mdi-account" title="Usuários" value="users"> </v-list-item>
       </router-link>
     </v-list>
+
+    <div class="pa-8">
+      <v-btn :loading="loading" @click="handleLogout" block>
+        Saindo
+        <template v-slot:loader>
+          <v-progress-linear indeterminate></v-progress-linear>
+        </template>
+      </v-btn>
+    </div>
   </v-navigation-drawer>
 </template>
 
 <script>
+import AuthenticationService from '@/services/AuthenticationService'
 export default {
   data() {
     return {
       permissions: JSON.parse(localStorage.getItem('@permissions_petshop')),
       name: JSON.parse(localStorage.getItem('@name')),
-      profile: JSON.parse(localStorage.getItem('@profile'))
+      profile: JSON.parse(localStorage.getItem('@profile')),
+      loading: false
+    }
+  },
+  methods: {
+    handleLogout() {
+      AuthenticationService.logout().then(() => {
+        this.$router.push('/')
+        localStorage.clear()
+      })
     }
   }
 }

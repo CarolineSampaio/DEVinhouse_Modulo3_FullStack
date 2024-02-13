@@ -15,6 +15,11 @@ class AuthenticationService {
     const response = await api.get('users')
     return response.data
   }
+
+  async logout() {
+    const response = await api.post('logout')
+    return response.data
+  }
 }
 
 export default new AuthenticationService()
