@@ -29,6 +29,7 @@ class AuthController extends Controller
         ],
         'RECEPCIONISTA' => [
             'create-pets',
+            'get-races',
             'get-pets',
             'delete-pets',
             'export-pet-pets',
