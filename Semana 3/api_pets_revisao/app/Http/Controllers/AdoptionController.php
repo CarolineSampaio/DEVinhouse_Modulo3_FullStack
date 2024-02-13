@@ -17,27 +17,17 @@ class AdoptionController extends Controller
     public function index(Request $request)
     {
         try {
-            // pegar os dados que foram enviados via query params
             $filters = $request->query();
-
-            // inicializa uma query
-            // $pets = Pet::query();
-
             $pets = Pet::query()
                 ->select(
                     'id',
                     'pets.name as pet_name',
                     'pets.breed_id',
-                    'pets.specie_id',
-                    'pets.size as size',
-                    'pets.weight as weight',
                     'pets.age as age'
                 )
-                #->with('breed') // traz todas as colunas
                 ->with(['breed' => function ($query) {
                     $query->select('name', 'id');
                 }])
-                ->with('specie')
                 ->where('client_id', null);
 
             // Verifica se há uma string de pesquisa
