@@ -9,6 +9,7 @@
           <th class="text-left">Porte</th>
           <th class="text-left">Idade</th>
           <th class="text-left">Peso</th>
+          <th class="text-left">Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -18,6 +19,21 @@
           <td>{{ this.translateWeight(pet.size) }}</td>
           <td>{{ pet.age }}</td>
           <td>{{ pet.weight }}</td>
+          <td class="pa-4">
+            <v-menu>
+              <template v-slot:activator="{ props }">
+                <v-btn icon v-bind="props">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item> <v-list-item-title>Editar</v-list-item-title> </v-list-item>
+                <v-list-item @click="handleDeletePet(pet.id)">
+                  <v-list-item-title>Deletar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </td>
         </tr>
       </tbody>
     </v-table>
@@ -34,6 +50,16 @@ export default {
     }
   },
   methods: {
+    handleDeletePet(petId) {
+      PetService.deleteOnePet(petId)
+        .then(() => {
+          alert('Pet deletado com sucesso')
+          this.pets = this.pets.filter((pet) => pet.id !== petId)
+        })
+        .catch(() => {
+          alert('Houve um erro ao deletar o pet')
+        })
+    },
     translateWeight(name) {
       switch (name) {
         case 'SMALL': {
