@@ -41,5 +41,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('users', [UserController::class, 'store']);
 Route::post('login', [AuthController::class, 'store']);
 
-Route::get('pets/{id}', [AdoptionController::class, 'show']);
 Route::get('pets/adocao', [AdoptionController::class, 'index']);
+Route::get('pets/{id}', [AdoptionController::class, 'show']);
