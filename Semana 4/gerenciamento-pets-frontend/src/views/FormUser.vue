@@ -14,7 +14,7 @@
       <tbody>
         <tr v-for="user in users" :key="user.id" data-test="row-table">
           <td>{{ user.name }}</td>
-          <td>{{ user.profile_id }}</td>
+          <td>{{ user.profile.name }}</td>
         </tr>
       </tbody>
     </v-table>
@@ -105,7 +105,6 @@ export default {
       AuthenticationService.getsUsers(this.text)
         .then((data) => {
           this.users = data
-          console.log(data)
         })
         .catch(() => alert('Houve um error'))
     }
