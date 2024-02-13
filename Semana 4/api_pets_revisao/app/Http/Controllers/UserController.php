@@ -7,10 +7,17 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends Controller {
-
+class UserController extends Controller
+{
     use HttpResponses;
-    public function store(Request $request) {
+    public function index()
+    {
+        $users = User::all();
+        return $users;
+    }
+
+    public function store(Request $request)
+    {
         try {
             $data = $request->all();
 
