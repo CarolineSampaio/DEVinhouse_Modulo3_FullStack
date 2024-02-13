@@ -22,6 +22,10 @@
       <router-link to="/veterinarios" v-if="permissions.includes('get-professionals')">
         <v-list-item prepend-icon="mdi-star" title="Profissionais" value="starred"> </v-list-item>
       </router-link>
+
+      <router-link to="/usuarios" v-if="permissions.includes('create-users')">
+        <v-list-item prepend-icon="mdi-account" title="Usuários" value="starred"> </v-list-item>
+      </router-link>
     </v-list>
   </v-navigation-drawer>
 </template>

@@ -6,6 +6,7 @@ import FormPet from '../views/FormPet.vue'
 import Login from '../views/Login.vue'
 import ListProfessionals from '../views/ListProfessionals.vue'
 import Aprendizado from '../views/Aprendizado.vue'
+import FormUser from '../views/FormUser.vue'
 
 const routes = [
   {
@@ -32,6 +33,12 @@ const routes = [
     path: '/veterinarios',
     name: 'List professionals',
     component: ListProfessionals
+  },
+  ,
+  {
+    path: '/usuarios',
+    name: 'FormUser',
+    component: FormUser
   },
   {
     path: '/aprendizado',
