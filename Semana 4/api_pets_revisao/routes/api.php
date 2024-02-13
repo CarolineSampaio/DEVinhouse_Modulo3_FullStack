@@ -36,9 +36,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('vaccines', [VaccineController::class, 'store'])->middleware(['ability:create-vaccines']);
 
     Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::post('users', [UserController::class, 'store'])->middleware(['ability:create-users']);
 });
 
-Route::post('users', [UserController::class, 'store']);
 Route::post('login', [AuthController::class, 'store']);
 
 Route::get('pets/adocao', [AdoptionController::class, 'index']);
