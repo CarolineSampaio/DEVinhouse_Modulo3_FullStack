@@ -120,4 +120,37 @@ class PetController extends Controller
             return $this->error($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function show($id)
+    {
+        $pet = Pet::find($id);
+
+        if (!$pet)  return $this->error('Pet não encontrado!', Response::HTTP_NOT_FOUND);
+
+        return $pet;
+    }
+
+    public function update(Request $request, $id)
+    {
+        $pet = Pet::find($id);
+        if (!$pet) return $this->error('Animal não encontrado!', Response::HTTP_NOT_FOUND);
+
+        $data = $request->all();
+
+        $request->validate([
+            'name' => 'string|max:150',
+            'age' => 'int',
+            'weight' => 'numeric',
+            'size' => 'string|in:SMALL,MEDIUM,LARGE,EXTRA_LARGE', // melhorar validacao para enum
+            'breed_id' => 'int',
+            'specie_id' => 'int',
+            'client_id' => 'int'
+        ]);
+
+        $pet->update($data);
+
+        $pet->save();
+
+        return $pet;
+    }
 }
