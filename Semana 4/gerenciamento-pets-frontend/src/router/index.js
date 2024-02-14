@@ -20,6 +20,11 @@ const routes = [
     component: Home
   },
   {
+    path: '/pets/editar/:id',
+    name: 'FormPetEdit',
+    component: FormPet
+  },
+  {
     path: '/pets/:id',
     name: 'ListPets',
     component: ListPets

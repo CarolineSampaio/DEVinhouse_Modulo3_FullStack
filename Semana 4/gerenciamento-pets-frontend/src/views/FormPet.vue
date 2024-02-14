@@ -1,10 +1,14 @@
 <template>
   <v-snackbar v-model="success" timeout="3000" color="success" location="top right">
-    Pet Cadastrado com sucesso!
+    {{ petId ? 'Pet atualizado com sucesso!' : 'Pet Cadastrado com sucesso!' }}
   </v-snackbar>
 
   <form @submit.prevent="handleSubmit">
-    <v-card width="80%" class="mx-auto px-6 mt-4" title="Cadastro de pet">
+    <v-card
+      width="80%"
+      class="mx-auto px-6 mt-4"
+      :title="petId ? 'Edição do pet' : 'Cadastro de pet'"
+    >
       <v-alert
         v-if="showError"
         title="Houve um erro ao cadastrar o pet"
@@ -93,7 +97,7 @@
           class="font-weight-bold"
           data-test="submit-button"
         >
-          Cadastrar
+          {{ petId ? 'Editar' : 'Cadastrar' }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -125,10 +129,25 @@ export default {
       itemsSize: optionsSize,
       itemsSpecies: [],
       itemsBreeds: [],
-      success: false
+      success: false,
+
+      petId: this.$route.params.id
     }
   },
   mounted() {
+    if (this.petId) {
+      PetService.getOnePet(this.petId)
+        .then((data) => {
+          this.name = data.name
+          this.age = data.age
+          this.weight = data.weight
+          this.size = data.size
+          this.specie_id = data.specie_id
+          this.breed_id = data.breed_id
+        })
+        .catch(() => alert('Houve um erro ao buscar o pet'))
+    }
+
     SpecieService.getAllSpecies()
       .then((data) => {
         this.itemsSpecies = data
@@ -152,6 +171,15 @@ export default {
         }
 
         schemaPetForm.validateSync(pet, { abortEarly: false })
+
+        if (this.petId) {
+          PetService.updateOnePet(this.petId, pet)
+            .then(() => {
+              this.success = true
+            })
+            .catch(() => alert('Houve um erro ao atualizar o pet'))
+          return
+        }
 
         PetService.createPet(pet)
           .then(() => {

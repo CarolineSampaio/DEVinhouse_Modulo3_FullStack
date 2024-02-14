@@ -11,6 +11,16 @@ class PetService {
     return response.data
   }
 
+  async getOnePet(petId) {
+    const response = await api.get(`pets/${petId}`)
+    return response.data
+  }
+
+  async updateOnePet(petId, body) {
+    const response = await api.put(`pets/${petId}`, body)
+    return response.data
+  }
+
   async deleteOnePet(petId) {
     const response = await api.delete(`pets/${petId}`)
     return response.data

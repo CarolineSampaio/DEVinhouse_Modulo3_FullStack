@@ -27,7 +27,9 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-item> <v-list-item-title>Editar</v-list-item-title> </v-list-item>
+                <v-list-item @click="handleRedirectToEdit(pet.id)"
+                  ><v-list-item-title>Editar</v-list-item-title>
+                </v-list-item>
                 <v-list-item @click="handleDeletePet(pet.id)">
                   <v-list-item-title>Deletar</v-list-item-title>
                 </v-list-item>
@@ -59,6 +61,9 @@ export default {
         .catch(() => {
           alert('Houve um erro ao deletar o pet')
         })
+    },
+    handleRedirectToEdit(petId) {
+      this.$router.push(`/pets/editar/${petId}`)
     },
     translateWeight(name) {
       switch (name) {
