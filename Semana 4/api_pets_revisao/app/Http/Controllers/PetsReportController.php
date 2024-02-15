@@ -6,8 +6,10 @@ use App\Models\Pet;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
-class PetsReportController extends Controller {
-    public function export(Request $request) {
+class PetsReportController extends Controller
+{
+    public function export(Request $request)
+    {
         $pets = Pet::query();
 
         $filters = $request->query();
@@ -28,6 +30,10 @@ class PetsReportController extends Controller {
             $pets->where('weight', $filters['weight']);
         }
 
+        if ($request->has('specie_id') && !empty($filters['specie_id'])) {
+            $pets->where('specie_id', $filters['specie_id']);
+        }
+
         $result = $pets->get();
 
         $pdf = Pdf::loadView('pdfs.petsTable', [
@@ -35,5 +41,30 @@ class PetsReportController extends Controller {
         ]);
 
         return $pdf->stream('relatorio.pdf');
+    }
+
+    public function showPerfil(Request $request)
+    {
+        $id = $request->input('id');
+
+        $pet = Pet::with('breed')
+            ->with('specie')
+            ->with('vaccines')
+            ->find($id);
+
+        $name = $pet->name;
+        $breed = $pet->breed->name;
+        $specie = $pet->specie->name;
+        $vaccines = $pet->vaccines;
+
+        $pdf = Pdf::loadView('pdfs.perfilPet', [
+            'name' => $name,
+            'breed' => $breed,
+            'specie' => $specie,
+            'vaccines' => $vaccines
+        ]);
+
+
+        return $pdf->stream('perfil.pdf');
     }
 }
