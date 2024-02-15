@@ -1,4 +1,5 @@
 import api from './api'
+import { saveAs } from 'file-saver'
 
 class PetService {
   async createPet(body) {
@@ -24,6 +25,16 @@ class PetService {
   async deleteOnePet(petId) {
     const response = await api.delete(`pets/${petId}`)
     return response.data
+  }
+
+  async export(specie_id) {
+    const response = await api.get(`pets/export?specie_id=${specie_id}`, { responseType: 'blob' })
+    saveAs(response.data, 'lista_de_pets.pdf')
+  }
+
+  async exportProfilePet(petId, petName) {
+    const response = await api.get(`pets/perfil?id=${petId}`, { responseType: 'blob' })
+    saveAs(response.data, `${petName}.pdf`)
   }
 }
 

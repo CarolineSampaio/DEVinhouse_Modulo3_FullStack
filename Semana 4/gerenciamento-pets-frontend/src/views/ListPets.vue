@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <h1>Lista de pets</h1>
+    <div class="d-flex justify-space-between">
+      <h1>Lista de pets</h1>
+      <v-btn color="orange" variant="flat" @click="handleExport">Exportar dados</v-btn>
+    </div>
+
     <v-table>
       <thead class="header-table">
         <tr>
@@ -33,6 +37,9 @@
                 <v-list-item @click="handleDeletePet(pet.id)">
                   <v-list-item-title>Deletar</v-list-item-title>
                 </v-list-item>
+                <v-list-item @click="handleExportProfilePet(pet.id, pet.pet_name)">
+                  <v-list-item-title>Exportar</v-list-item-title>
+                </v-list-item>
               </v-list>
             </v-menu>
           </td>
@@ -62,9 +69,27 @@ export default {
           alert('Houve um erro ao deletar o pet')
         })
     },
+
     handleRedirectToEdit(petId) {
       this.$router.push(`/pets/editar/${petId}`)
     },
+
+    handleExport() {
+      PetService.export(this.$route.params.id)
+        .then(() => {
+          alert('Baixado com sucesso. verifique sua pasta de downloads')
+        })
+        .catch(() => alert('Houve ao exportar a lista de pets'))
+    },
+
+    handleExportProfilePet(petId, petName) {
+      PetService.exportProfilePet(petId, petName)
+        .then(() => {
+          alert('Baixado com sucesso. verifique sua pasta de downloads')
+        })
+        .catch(() => alert('Houve ao exportar a lista de pets'))
+    },
+
     translateWeight(name) {
       switch (name) {
         case 'SMALL': {
