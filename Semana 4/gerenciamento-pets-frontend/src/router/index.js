@@ -7,6 +7,7 @@ import Login from '../views/Login.vue'
 import ListProfessionals from '../views/ListProfessionals.vue'
 import Aprendizado from '../views/Aprendizado.vue'
 import FormUser from '../views/FormUser.vue'
+import VaccinationForm from '../views/VaccinationForm.vue'
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
     path: '/usuarios',
     name: 'FormUser',
     component: FormUser
+  },
+  {
+    path: '/pets/:id/vacinacao',
+    name: 'VaccinationForm',
+    component: VaccinationForm
   },
   {
     path: '/aprendizado',

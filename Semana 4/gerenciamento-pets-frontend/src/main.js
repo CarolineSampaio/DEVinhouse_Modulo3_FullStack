@@ -6,6 +6,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
+import VCalendar from 'v-calendar'
+import 'v-calendar/style.css'
+
 import 'vuetify/styles'
 
 import { createVuetify } from 'vuetify'
@@ -22,6 +25,6 @@ const vuetify = createVuetify({
 
 const app = createApp(App)
 
-app.use(router).use(vuetify)
+app.use(router).use(vuetify).use(VCalendar)
 
 app.mount('#app')
