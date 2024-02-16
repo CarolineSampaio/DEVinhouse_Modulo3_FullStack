@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('professionals', [ProfessionalController::class, 'store'])->middleware(['ability:create-professionals']);
     Route::get('professionals', [ProfessionalController::class, 'index'])->middleware(['ability:get-professionals']);
 
+    Route::get('vacinacao/{id}/pets', [VaccineController::class, 'index'])->middleware(['ability:create-vaccines']);
     Route::post('vaccines', [VaccineController::class, 'store'])->middleware(['ability:create-vaccines']);
 
     Route::post('logout', [AuthController::class, 'logout']);
