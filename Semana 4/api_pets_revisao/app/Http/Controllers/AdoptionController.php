@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendWelcomePet;
 use App\Models\Adoption;
+use App\Models\Client;
 use App\Models\People;
 use App\Models\Pet;
 use App\Traits\HttpResponses;
@@ -93,5 +94,42 @@ class AdoptionController extends Controller
             ->orWhere('status', 'ilike', "%$search%");
 
         return $adoptions->get();
+    }
+
+    public function approve(Request $request)
+    {
+        // Atualiza o status da adoção para aprovado
+        $data = $request->all();
+
+        $request->validate([
+            'adoption_id' => 'integer|required',
+        ]);
+
+        $adoption = Adoption::find($data['adoption_id']);
+
+        if (!$adoption)  return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
+
+        $adoption->update(['status' => 'APROVADO']);
+        $adoption->save();
+
+        // efetivo o cadastro da pessoa que tem intenção de adotar no sistema
+        $people = People::create([
+            'name' => $adoption->name,
+            'email' => $adoption->email,
+            'cpf' => $adoption->cpf,
+            'contact' => $adoption->contact,
+        ]);
+
+        $client = Client::create([
+            'people_id' => $people->id,
+            'bonus' => true
+        ]);
+
+        // vincula o pet com cliente criado
+        $pet = Pet::find($adoption->pet_id);
+        $pet->update(['client_id' => $client->id]);
+        $pet->save();
+
+        return $client;
     }
 }
