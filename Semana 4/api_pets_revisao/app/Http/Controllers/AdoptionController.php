@@ -80,4 +80,18 @@ class AdoptionController extends Controller
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
+
+    public function getAdoptions(Request $request)
+    {
+        $search = $request->input('search');
+
+        $adoptions = Adoption::query()
+            ->with('pet')
+            ->where('name', 'ilike', "%$search%")
+            ->orWhere('email', 'ilike', "%$search%")
+            ->orWhere('contact', 'ilike', "%$search%")
+            ->orWhere('status', 'ilike', "%$search%");
+
+        return $adoptions->get();
+    }
 }
