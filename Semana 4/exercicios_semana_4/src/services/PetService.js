@@ -7,7 +7,7 @@ class PetService {
   }
 
   async getOnePet(id) {
-    const response = await axios.get(`http://127.0.0.1:8000/api/pets/${id}`)
+    const response = await axios.get(`http://127.0.0.1:8000/api/pets/${id}/adocao`)
     return response.data
   }
 

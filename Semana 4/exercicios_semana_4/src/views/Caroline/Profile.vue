@@ -92,15 +92,30 @@
                 data-test="input-email"
               ></v-text-field>
 
-              <v-text-field
-                v-model="contact"
-                label="Telefone"
-                type="text"
-                :error-messages="errors.contact"
-                variant="outlined"
-                class="pb-2"
-                data-test="input-contact"
-              ></v-text-field>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="cpf"
+                    label="CPF"
+                    type="text"
+                    :error-messages="errors.cpf"
+                    variant="outlined"
+                    class="pb-2"
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="contact"
+                    label="Telefone"
+                    type="text"
+                    :error-messages="errors.contact"
+                    variant="outlined"
+                    class="pb-2"
+                    data-test="input-contact"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
 
               <v-textarea
                 v-model="observations"
@@ -130,7 +145,7 @@
   </v-app>
 
   <v-snackbar v-model="message" timeout="3000" color="success" location="top">
-    Formulário enviado com sucesso!
+    Formulário enviado com sucesso. Aguarde o contato da nossa equipe!
   </v-snackbar>
 </template>
 
@@ -146,6 +161,7 @@ export default {
       email: '',
       contact: '',
       observations: '',
+      cpf: '',
       errors: {},
       message: false,
 
@@ -202,6 +218,7 @@ export default {
           {
             name: this.name,
             email: this.email,
+            cpf: this.cpf,
             contact: this.contact,
             observations: this.observations
           },
@@ -212,14 +229,16 @@ export default {
         PetService.adoptPet({
           name: this.name,
           email: this.email,
+          cpf: this.cpf,
           contact: this.contact,
-          observations: this.observations
+          observations: this.observations,
+          pet_id: this.$route.params.id
         })
           .then(() => {
-            alert('Cadastrado com sucesso')
             this.name = ''
             this.email = ''
             this.contact = ''
+            this.cpf = ''
             this.observations = ''
             this.message = true
           })
