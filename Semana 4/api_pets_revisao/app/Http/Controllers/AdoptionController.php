@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendWelcomePet;
+use App\Mail\SendDocuments;
 use App\Models\Adoption;
 use App\Models\Client;
 use App\Models\File;
@@ -11,6 +11,7 @@ use App\Models\Pet;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -131,6 +132,9 @@ class AdoptionController extends Controller
         $pet = Pet::find($adoption->pet_id);
         $pet->update(['client_id' => $client->id]);
         $pet->save();
+
+        Mail::to($people->email, $people->name)
+            ->send(new SendDocuments($people->name));
 
         return $client;
     }
