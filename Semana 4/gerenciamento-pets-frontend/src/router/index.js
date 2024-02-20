@@ -8,6 +8,8 @@ import ListProfessionals from '../views/ListProfessionals.vue'
 import Aprendizado from '../views/Aprendizado.vue'
 import FormUser from '../views/FormUser.vue'
 import VaccinationForm from '../views/VaccinationForm.vue'
+import Adoptions from '../views/Adoptions.vue'
+import AdoptionsDocuments from '../views/Documents.vue'
 
 const routes = [
   {
@@ -50,6 +52,16 @@ const routes = [
     path: '/pets/:id/vacinacao',
     name: 'VaccinationForm',
     component: VaccinationForm
+  },
+  {
+    path: '/adocoes',
+    name: 'Adoptions',
+    component: Adoptions
+  },
+  {
+    path: '/adocoes/documentos/:id',
+    name: 'AdoptionsDocuments',
+    component: AdoptionsDocuments
   },
   {
     path: '/aprendizado',
