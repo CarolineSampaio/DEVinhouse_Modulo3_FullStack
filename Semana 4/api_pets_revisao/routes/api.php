@@ -17,6 +17,8 @@ Route::post('pets/adocao', [AdoptionController::class, 'store']);
 Route::get('pets/{id}/adocao', [AdoptionController::class, 'show']);
 Route::post('login', [AuthController::class, 'store']);
 
+Route::post('upload', [AdoptionController::class, 'upload']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('breeds', [BreedController::class, 'store'])->middleware(['auth:sanctum', 'ability:create-races']);
     Route::get('breeds', [BreedController::class, 'index'])->middleware(['auth:sanctum', 'ability:get-races']);
