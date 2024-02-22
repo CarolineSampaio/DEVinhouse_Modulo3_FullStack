@@ -23,7 +23,7 @@ class BreedTest extends TestCase
         ]);
     }
 
-    public function test_cannot_create_with_invalid_name(): void
+    public function test_cannot_create_breed_with_invalid_name(): void
     {
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
 
@@ -38,7 +38,7 @@ class BreedTest extends TestCase
         ]);
     }
 
-    public function test_cannot_create_without_name(): void
+    public function test_cannot_create_breed_without_name(): void
     {
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
 
@@ -55,9 +55,7 @@ class BreedTest extends TestCase
 
     public function test_user_can_list_all_Breeds()
     {
-        Breeds::factory(3)->create();
-        // Breeds::create(['name' => 'Gato']);
-        // Breeds::create(['name' => 'Cachorro']);
+        Breeds::factory(5)->create();
 
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
         $response = $this->actingAs($user)->get('/api/breeds');
