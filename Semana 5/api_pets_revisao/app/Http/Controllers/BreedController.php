@@ -7,19 +7,22 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class BreedController extends Controller {
+class BreedController extends Controller
+{
 
     use HttpResponses;
 
-    public function index() {
+    public function index()
+    {
         $breeds = Breeds::all();
         return $breeds;
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             $request->validate([
-                'name' => 'required|unique:breeds|max:50'
+                'name' => 'required|string|unique:breeds|max:50'
             ]);
 
             $data = $request->all();
