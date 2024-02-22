@@ -8,16 +8,19 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SpecieController extends Controller {
+class SpecieController extends Controller
+{
 
     use HttpResponses;
 
-    public function index() {
+    public function index()
+    {
         $species = Specie::all();
         return $species;
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             $request->validate([
                 'name' => 'required|unique:species|max:50'
@@ -31,7 +34,8 @@ class SpecieController extends Controller {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         try {
             $specie = Specie::find($id);
 
@@ -47,7 +51,7 @@ class SpecieController extends Controller {
             }
 
             $specie->delete();
-            return response('Espécie removida com sucesso!');
+            return $this->response('Espécie removida com sucesso!', Response::HTTP_NO_CONTENT);
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
