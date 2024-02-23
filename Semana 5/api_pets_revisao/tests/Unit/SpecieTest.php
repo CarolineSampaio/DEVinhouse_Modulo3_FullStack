@@ -43,7 +43,7 @@ class SpecieTest extends TestCase
         ]);
     }
 
-    public function test_cannot_create_specie_without_name(): void
+    public function test_user_cannot_create_specie_without_name(): void
     {
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
 

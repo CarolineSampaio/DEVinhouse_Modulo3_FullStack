@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
-    public function test_use_can_add_new_client(): void
+    public function test_user_can_add_new_client(): void
     {
         $user = User::factory()->create(['profile_id' => 3, 'password' => '12345678']);
 

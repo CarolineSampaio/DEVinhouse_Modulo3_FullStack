@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class BreedTest extends TestCase
 {
-    public function test_can_add_new_Breed(): void
+    public function test_user_can_add_new_Breed(): void
     {
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
 
@@ -23,7 +23,7 @@ class BreedTest extends TestCase
         ]);
     }
 
-    public function test_cannot_create_breed_with_invalid_name(): void
+    public function test_user_cannot_create_breed_with_invalid_name(): void
     {
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
 
@@ -38,7 +38,7 @@ class BreedTest extends TestCase
         ]);
     }
 
-    public function test_cannot_create_breed_without_name(): void
+    public function test_user_cannot_create_breed_without_name(): void
     {
         $user = User::factory()->create(['profile_id' => 2, 'password' => '12345678']);
 

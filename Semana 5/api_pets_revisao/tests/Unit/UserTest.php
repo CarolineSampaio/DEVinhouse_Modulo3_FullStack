@@ -114,7 +114,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function test_check_bad_request_login_api_response(): void
+    public function test_user_cannot_login_with_invalid_credentials(): void
     {
         $response = $this->post('/api/login', [
             'email' => env("DEFAULT_EMAIL"),
