@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class People extends Model {
+class People extends Model
+{
     use HasFactory;
 
     protected $table = 'peoples';
@@ -16,4 +17,9 @@ class People extends Model {
         'email',
         'contact'
     ];
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'people_id', 'id');
+    }
 }
