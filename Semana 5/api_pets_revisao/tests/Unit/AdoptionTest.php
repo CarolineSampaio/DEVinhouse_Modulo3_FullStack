@@ -225,4 +225,67 @@ class AdoptionTest extends TestCase
             ]
         ]);
     }
+
+    public function test_user_can_realized_adoption(): void
+    {
+        $specie = Specie::factory()->create();
+        $breed = Breeds::factory()->create();
+        $pet  = Pet::factory()->create(['breed_id' => $breed->id, 'specie_id' => $specie->id]);
+
+        $adoption = Adoption::factory()->create(['pet_id' => $pet->id]);
+        $user = User::factory()->create(['profile_id' => 3, 'password' => '12345678']);
+
+        $this->assertDatabaseHas('adoptions', ['id' => $adoption->id, 'status' => 'PENDENTE']);
+        $response = $this->actingAs($user)->post('/api/adoptions/realized', ['adoption_id' => $adoption->id]);
+
+        /* Verifica a mudança de status */
+        $this->assertDatabaseHas('adoptions', ['id' => $adoption->id, 'status' => 'APROVADO']);
+
+        /* Verifica a criação da pessoa e do cliente */
+        $this->assertDatabaseHas('peoples', ['email' => $adoption->email, 'cpf' => $adoption->cpf]);
+        $people = People::query()->where(['cpf' => $adoption->cpf])->first();
+        $this->assertDatabaseHas('clients', ['people_id' => $people->id]);
+
+        /* Verifica se pet recebeu o id do cliente */
+        $people->load('client');
+        $this->assertDatabaseHas('pets', ['id' => $pet->id, 'client_id' => $people->client->id]);
+
+        /* Verifica se criou a solicitação com o id do cliente vinculado */
+        $this->assertDatabaseHas('solicitations_documents', ['client_id' =>  $people->client->id]);
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'id' => true,
+            'people_id' => true,
+            'bonus' => true
+        ]);
+    }
+
+    public function test_user_cannot_realized_adoption_with_invalid_adoption_id(): void
+    {
+        $user = User::factory()->create(['profile_id' => 3, 'password' => '12345678']);
+
+        $response = $this->actingAs($user)->post('/api/adoptions/realized', ['adoption_id' => 999]);
+
+        $response->assertStatus(404)->assertJson([
+            'message' => 'Dado não encontrado',
+            'status' => 404,
+            'errors' => [],
+            'data' => []
+        ]);
+    }
+
+    public function test_user_cannot_realized_adoption_without_adoption_id(): void
+    {
+        $user = User::factory()->create(['profile_id' => 3, 'password' => '12345678']);
+
+        $response = $this->actingAs($user)->post('/api/adoptions/realized', []);
+
+        $response->assertStatus(400)->assertJson([
+            'message' => 'The adoption id field is required.',
+            'status' => 400,
+            'errors' => [],
+            'data' => []
+        ]);
+    }
 }
