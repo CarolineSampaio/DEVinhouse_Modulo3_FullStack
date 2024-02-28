@@ -13,4 +13,14 @@ class DashboardController extends Controller
         right join species on pets.specie_id = species.id
         group by specie_id, species.name');
     }
+
+    public function getClientsAmountByMonth(Request $request)
+    {
+        return DB::select('select count(created_at),
+        EXTRACT(MONTH FROM created_at) as mes
+        from clients c
+        group by EXTRACT(MONTH FROM created_at)
+        order by EXTRACT(MONTH FROM created_at)
+        ');
+    }
 }

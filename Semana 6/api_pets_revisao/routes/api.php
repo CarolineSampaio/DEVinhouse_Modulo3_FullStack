@@ -23,6 +23,7 @@ Route::post('upload', [AdoptionController::class, 'upload']);
 
 Route::post('import/peoples', [ImportPeoplesController::class, 'import']);
 Route::get('dashboard/species', [DashboardController::class, 'getSpeciesAmountByPet']);
+Route::get('dashboard/clients', [DashboardController::class, 'getClientsAmountByMonth']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('breeds', [BreedController::class, 'store'])->middleware(['auth:sanctum', 'ability:create-races']);
