@@ -4,6 +4,7 @@ use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ImportPeoplesController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetsReportController;
 use App\Http\Controllers\ProfessionalController;
@@ -18,6 +19,8 @@ Route::get('pets/{id}/adocao', [AdoptionController::class, 'show']);
 Route::post('login', [AuthController::class, 'store']);
 
 Route::post('upload', [AdoptionController::class, 'upload']);
+
+Route::post('import/peoples', [ImportPeoplesController::class, 'import']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('breeds', [BreedController::class, 'store'])->middleware(['auth:sanctum', 'ability:create-races']);
