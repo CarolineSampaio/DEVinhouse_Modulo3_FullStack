@@ -25,8 +25,10 @@ class BreedController extends Controller
                 'name' => 'required|string|unique:breeds|max:50'
             ]);
 
-            $data = $request->all();
-            $breed = Breeds::create($data);
+            $body = $request->all();
+
+            $breed = Breeds::create($body);
+
             return $breed;
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);

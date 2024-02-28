@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendWelcomePet;
+
 use App\Models\People;
 use App\Models\Pet;
+
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +19,6 @@ class PetController extends Controller
     public function index(Request $request)
     {
         try {
-
             // pegar os dados que foram enviados via query params
             $filters = $request->query();
 
@@ -75,7 +76,7 @@ class PetController extends Controller
     {
         try {
             // rebecer os dados via body
-            $data = $request->all();
+            $body = $request->all();
 
             $request->validate([
                 'name' => 'required|string|max:150',
@@ -87,7 +88,7 @@ class PetController extends Controller
                 'client_id' => 'int'
             ]);
 
-            $pet = Pet::create($data);
+            $pet = Pet::create($body);
 
             if (!empty($pet->client_id)) {
 
@@ -112,7 +113,6 @@ class PetController extends Controller
                 return $this->error('Animal não encontrado!', Response::HTTP_NOT_FOUND);
             }
 
-
             $pet->delete();
 
             return $this->response('', Response::HTTP_NO_CONTENT);
@@ -135,7 +135,7 @@ class PetController extends Controller
         $pet = Pet::find($id);
         if (!$pet) return $this->error('Animal não encontrado!', Response::HTTP_NOT_FOUND);
 
-        $data = $request->all();
+        $body = $request->all();
 
         $request->validate([
             'name' => 'string|max:150',
@@ -147,8 +147,7 @@ class PetController extends Controller
             'client_id' => 'int'
         ]);
 
-        $pet->update($data);
-
+        $pet->update($body);
         $pet->save();
 
         return $pet;

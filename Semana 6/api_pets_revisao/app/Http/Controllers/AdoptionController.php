@@ -167,8 +167,7 @@ class AdoptionController extends Controller
         $slugName = Str::of($description)->slug();
         $fileName = $slugName . '.' . $file->extension();
 
-        $pathBucket = Storage::disk('s3')->put('documentos', $file);
-
+        Storage::disk('s3')->put('documentos', $file);
         $fullPathFile = Storage::disk('s3')->url($fileName);
 
         $file = File::create(

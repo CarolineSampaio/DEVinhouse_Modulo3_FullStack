@@ -26,8 +26,8 @@ class SpecieController extends Controller
                 'name' => 'required|unique:species|max:50'
             ]);
 
-            $data = $request->all();
-            $specie = Specie::create($data);
+            $body = $request->all();
+            $specie = Specie::create($body);
             return $specie;
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -39,10 +39,10 @@ class SpecieController extends Controller
         try {
             $specie = Specie::find($id);
 
-            $count =  Pet::query()
+            $amountPetsUsingSpecieId =  Pet::query()
                 ->where('specie_id', $id)->count();
 
-            if ($count > 0) {
+            if ($amountPetsUsingSpecieId > 0) {
                 return $this->error('Não é possível remover a espécie, pois existem animais cadastrados com ela!', Response::HTTP_CONFLICT);
             }
 
