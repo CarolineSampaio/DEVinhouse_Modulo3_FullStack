@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBreedRequest;
 use App\Models\Breeds;
 use App\Traits\HttpResponses;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class BreedController extends Controller
@@ -18,13 +18,9 @@ class BreedController extends Controller
         return $breeds;
     }
 
-    public function store(Request $request)
+    public function store(StoreBreedRequest $request)
     {
         try {
-            $request->validate([
-                'name' => 'required|string|unique:breeds|max:50'
-            ]);
-
             $body = $request->all();
 
             $breed = Breeds::create($body);
