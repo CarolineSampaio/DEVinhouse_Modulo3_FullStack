@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePetRequest;
 use App\Mail\SendWelcomePet;
-
+use App\Models\File;
 use App\Models\People;
 use App\Models\Pet;
 
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class PetController extends Controller
@@ -34,14 +37,16 @@ class PetController extends Controller
                     'pets.specie_id',
                     'pets.size as size',
                     'pets.weight as weight',
-                    'pets.age as age'
+                    'pets.age as age',
+                    'pets.file_id as file_id'
                 )
                 #->with('breed') // traz todas as colunas
                 ->with(['breed' => function ($query) {
                     $query->select('name', 'id');
                 }])
                 ->with('vaccines.professional.people')
-                ->with('specie');
+                ->with('specie')
+                ->with('file');
 
             // verifica se filtro
             if ($request->has('name') && !empty($filters['name'])) {
@@ -85,11 +90,26 @@ class PetController extends Controller
     public function store(StorePetRequest $request)
     {
         try {
-            $body = $request->all();
-            $pet = Pet::create($body);
+            // rebecer os dados via body
+            $file = $request->file('photo');
+            $body =  $request->input();
+
+            /* Enviar o arquivo para amazon */
+            $pathBucket = Storage::disk('s3')->put('photos', $file);
+            $fullPathFile = Storage::disk('s3')->url($pathBucket);
+
+            $file = File::create(
+                [
+                    'name' => 'foto_' . $body['name'],
+                    'size' => $file->getSize(),
+                    'mime' => $file->extension(),
+                    'url' => $fullPathFile
+                ]
+            );
+
+            $pet = Pet::create([...$body, 'file_id' => $file->id]);
 
             $this->sendWelcomeEmailToClient($pet);
-
             return $pet;
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);

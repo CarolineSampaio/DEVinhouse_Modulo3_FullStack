@@ -17,6 +17,16 @@
       ></v-alert>
 
       <v-row class="mt-4">
+        <v-col cols="12">
+          <v-file-input
+            v-model="photo"
+            label="Selecione a foto do pet"
+            placeholder="Escolha um arquivo..."
+            prepend-icon="mdi-file"
+            accept="image/*"
+            variant="outlined"
+          ></v-file-input>
+        </v-col>
         <v-col cols="12" md="8">
           <v-text-field
             label="Nome"
@@ -117,6 +127,7 @@ import * as yup from 'yup'
 export default {
   data() {
     return {
+      photo: null,
       name: '',
       age: 1,
       weight: 1,
@@ -172,6 +183,17 @@ export default {
 
         schemaPetForm.validateSync(pet, { abortEarly: false })
 
+        const formData = new FormData()
+        // pegando a posição do 0 do array para envio da primeira imagem
+        formData.append('photo', this.photo[0])
+        formData.append('name', this.name)
+        formData.append('age', this.age)
+        formData.append('size', this.size)
+        formData.append('breed_id', this.breed_id)
+        formData.append('specie_id', this.specie_id)
+        formData.append('weight', this.weight)
+        formData.append('description', this.description)
+
         if (this.petId) {
           PetService.updateOnePet(this.petId, pet)
             .then(() => {
@@ -179,21 +201,24 @@ export default {
             })
             .catch(() => alert('Houve um erro ao atualizar o pet'))
           return
+        } else {
+          PetService.createPet(formData)
+            .then(() => {
+              this.success = true
+
+              this.photo = null
+              this.name = ''
+              this.age = 1
+              this.weight = 1
+              this.size = ''
+              this.specie_id = ''
+              this.breed_id = ''
+              this.errors = {}
+            })
+            .catch(() => {
+              this.showError = true
+            })
         }
-
-        PetService.createPet(pet)
-          .then(() => {
-            this.success = true
-
-            this.name = ''
-            this.age = 1
-            this.weight = 1
-            this.size = ''
-            this.specie_id = ''
-            this.breed_id = ''
-            this.errors = {}
-          })
-          .catch(() => (this.showError = true))
       } catch (error) {
         if (error instanceof yup.ValidationError) {
           this.errors = captureErrorYup(error)
