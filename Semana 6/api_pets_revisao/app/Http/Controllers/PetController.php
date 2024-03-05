@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePetRequest;
+use App\Http\Requests\UpdatePetRequest;
+use App\Http\Services\File\CreateFileService;
+use App\Http\Services\Pet\CreateOnePetService;
+use App\Http\Services\Pet\GetOnePetService;
+use App\Http\Services\Pet\SendEmailWelcomeService;
+use App\Http\Services\Pet\UpdateOnePetService;
 use App\Mail\SendWelcomePet;
+use Illuminate\Support\Str;
 use App\Models\File;
 use App\Models\People;
 use App\Models\Pet;
@@ -87,29 +94,21 @@ class PetController extends Controller
         }
     }
 
-    public function store(StorePetRequest $request)
-    {
+    public function store(
+        StorePetRequest $request,
+        CreateFileService $createFileService,
+        CreateOnePetService $createOnePetService,
+        SendEmailWelcomeService $sendEmailWelcomeService
+    ) {
         try {
-            // rebecer os dados via body
             $file = $request->file('photo');
             $body =  $request->input();
 
-            /* Enviar o arquivo para amazon */
-            $pathBucket = Storage::disk('s3')->put('photos', $file);
-            $fullPathFile = Storage::disk('s3')->url($pathBucket);
+            $file = $createFileService->handle('photos', $file, $body['name']);
+            $pet = $createOnePetService->handle([...$body, 'file_id' => $file->id]);
 
-            $file = File::create(
-                [
-                    'name' => 'foto_' . $body['name'],
-                    'size' => $file->getSize(),
-                    'mime' => $file->extension(),
-                    'url' => $fullPathFile
-                ]
-            );
+            $sendEmailWelcomeService->handle($pet);
 
-            $pet = Pet::create([...$body, 'file_id' => $file->id]);
-
-            $this->sendWelcomeEmailToClient($pet);
             return $pet;
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
@@ -133,35 +132,56 @@ class PetController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($id, GetOnePetService $getOnePetService)
     {
-        $pet = Pet::find($id);
-
-        if (!$pet)  return $this->error('Pet não encontrado!', Response::HTTP_NOT_FOUND);
-
-        return $pet;
+        try {
+            $pet = $getOnePetService->handle($id);
+            if (!$pet)  return $this->error('Pet não encontrado!', Response::HTTP_NOT_FOUND);
+            return $pet;
+        } catch (\Exception $exception) {
+            return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
     }
 
-    public function update(Request $request, $id)
+    public function update($id, UpdatePetRequest $request, UpdateOnePetService $updateOnePetService)
     {
-        $pet = Pet::find($id);
-        if (!$pet) return $this->error('Animal não encontrado!', Response::HTTP_NOT_FOUND);
+        try {
+            $body = $request->all();
+            $pet =  $updateOnePetService->handle($id, $body);
+            return $pet;
+        } catch (\Exception $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
+    }
 
-        $body = $request->all();
+    public function upload(Request $request)
+    {
+        $createds = [];
 
-        $request->validate([
-            'name' => 'string|max:150',
-            'age' => 'int',
-            'weight' => 'numeric',
-            'size' => 'string|in:SMALL,MEDIUM,LARGE,EXTRA_LARGE', // melhorar validacao para enum
-            'breed_id' => 'int',
-            'specie_id' => 'int',
-            'client_id' => 'int'
-        ]);
+        if ($request->has('files')) {
+            foreach ($request->file('files') as $file) {
 
-        $pet->update($body);
-        $pet->save();
+                $description =  $request->input('description');
 
-        return $pet;
+                $slugName = Str::of($description)->slug();
+                $fileName = $slugName . '.' . $file->extension();
+
+                $pathBucket = Storage::disk('s3')->put('documentos', $file);
+                $fullPathFile = Storage::disk('s3')->url($pathBucket);
+
+                $fileCreated = File::create(
+                    [
+                        'name' => $fileName,
+                        'size' => $file->getSize(),
+                        'mime' => $file->extension(),
+                        'url' => $pathBucket
+                    ]
+                );
+
+                array_push($createds, $fileCreated);
+            }
+        }
+
+        return $createds;
     }
 }

@@ -31,7 +31,8 @@ class StorePetRequest extends FormRequest
             'size' => 'required|string|in:SMALL,MEDIUM,LARGE,EXTRA_LARGE',
             'breed_id' => 'required|int',
             'specie_id' => 'required|int',
-            'client_id' => 'int'
+            'client_id' => 'int',
+            'photo' => 'required'
         ];
     }
     public function messages(): array
@@ -49,7 +50,8 @@ class StorePetRequest extends FormRequest
             'breed_id.int' => 'O id da raça deve ser um valor inteiro',
             'specie_id.required' => 'O id da espécie é obrigatório',
             'specie_id.int' => 'O id da espécie deve ser um valor inteiro',
-            'client_id.int' => 'O id do cliente deve ser um valor inteiro'
+            'client_id.int' => 'O id do cliente deve ser um valor inteiro',
+            'photo.required' => 'A foto do pet é obrigatória'
         ];
     }
 }
